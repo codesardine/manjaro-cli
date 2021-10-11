@@ -8,7 +8,7 @@ def title():
 
 def action(msg):
     with indent(3, quote=">>"):
-        puts(colored.yellow(msg))
+        puts(colored.green(msg))
 
 def white(msg):
     with indent(2):
@@ -23,3 +23,7 @@ def red(msg):
 def cyan(msg):
     with indent(2):
         puts(colored.cyan(msg))
+
+def yellow(msg):
+    with indent(2):
+        puts(colored.yellow(msg))

@@ -17,6 +17,7 @@ color.title()
 @click.option("--refresh", "-ref", metavar="Options=( database )", help="Refresh keys/mirrors/database")
 @click.option("--graphic-drivers", "-gd", metavar="Options=( -info/-set-open/-set-proprietary )", help="Information or detect and install graphic drivers")
 @click.option("--branch", "-br", metavar="Options=( -info/-set-stable/-set-staging/-set-testing/-set-unstable )", help="search package")
+@click.option("--journal", "-j", metavar="Options=( -error/-warning/-debug/-info )", help="Display messages in your system for debuging purposes")
 def cli(
     install,
     install_flatpaks,
@@ -30,7 +31,8 @@ def cli(
     search_all,
     refresh,
     graphic_drivers,
-    branch
+    branch,
+    journal
 ):
     if search_flatpak or search_snap or search or search_all:
         from Manjaro.CLI.packages import _check_plugin_support, Search_flatpaks, Search_pkgs, Search_snaps
@@ -113,3 +115,20 @@ def cli(
 
         elif graphic_drivers == "-set-proprietary":
             Hardware.Graphics.set_open()
+
+    if journal:
+        from Manjaro.CLI import Diagnose
+        if journal == "-error":
+            Diagnose.error()
+
+        elif journal == "-debug":
+            Diagnose.debug()
+
+        elif journal == "-warning":
+            Diagnose.warning()
+
+        elif journal == "-info":
+            Diagnose.info()
+
+        else:
+            color.red("Available options is [ -info/-error/-warning/-info ]")
