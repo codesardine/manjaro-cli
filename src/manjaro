@@ -13,7 +13,6 @@ if len(sys.argv) == 1:
         "manjaro -r 'inkscape gimp' -rs gimp -if 'org.gimp.GIMP org.inkscape.Inkscape'")
     print()
     import subprocess
-    subprocess.run(["manjaro", "--help"], shell=True)
-
-main.cli()
-
+    subprocess.run(["manjaro", "--help"])
+else:
+    main.cli()
