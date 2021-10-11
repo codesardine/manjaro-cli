@@ -2,6 +2,25 @@ from Manjaro.SDK import PackageManager
 from Manjaro.CLI import color
 pamac = PackageManager.Pamac()
 
+def _check_plugin_support(format=""):
+    
+    def _create_new_instance():
+        import sys, subprocess
+        subprocess.run(sys.argv)
+        sys.exit()
+
+    if format == "flatpak" and not pamac.config.get_support_flatpak():
+        color.action("Instaling Flatpak Plugin")
+        pamac.add_pkgs_to_install(["libpamac-flatpak-plugin"])
+        pamac.run()
+        _create_new_instance()
+
+    elif format == "snap" and not pamac.config.get_support_snap():
+        color.action("Instaling Snap Plugin")
+        pamac.add_pkgs_to_install(["libpamac-snap-plugin"])
+        pamac.run()
+        _create_new_instance()
+
 def add_pkg(pkgs):
     color.action("Instaling and upgrading packages")
     _list = pkgs.split(" ")

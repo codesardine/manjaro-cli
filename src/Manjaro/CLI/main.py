@@ -33,8 +33,10 @@ def cli(
     branch
 ):
     if search_flatpak or search_snap or search or search_all:
-        from Manjaro.CLI.packages import Search_flatpaks, Search_pkgs, Search_snaps
+        from Manjaro.CLI.packages import _check_plugin_support, Search_flatpaks, Search_pkgs, Search_snaps
         if search_all:
+            _check_plugin_support(format="flatpak")
+            _check_plugin_support(format="snap")
             Search_pkgs(search_all)
             Search_flatpaks(search_all)
             Search_snaps(search_all)
@@ -43,9 +45,11 @@ def cli(
             Search_pkgs(search)
 
         elif search_flatpak:
+            _check_plugin_support(format="flatpak")
             Search.flatpaks(search_flatpak)
 
         elif search_snap:
+            _check_plugin_support(format="snap")
             Search_snaps(search_snap)
 
     if refresh:
@@ -72,24 +76,29 @@ def cli(
 
     if install or install_flatpaks or install_snaps \
             or remove or remove_flatpaks or remove_snaps:
-        from Manjaro.CLI.packages import add_pkg, pamac, add_snaps, add_flatpaks
+        from Manjaro.CLI.packages import _check_plugin_support, pamac
+        from Manjaro.CLI.packages import add_pkg, add_snaps, add_flatpaks
         from Manjaro.CLI.packages import uninstall_pkgs, uninstall_snaps, uninstall_flatpaks
         if install:
             add_pkg(install)
 
         if install_snaps:
+            _check_plugin_support(format="snap")
             add_snaps(install_snaps)
 
         if install_flatpaks:
+            _check_plugin_support(format="flatpak")
             add_flatpaks(install_flatpaks)         
 
         if remove:
             uninstall_pkgs(remove)
 
         if remove_flatpaks:
+            _check_plugin_support(format="flatpak")
             uninstall_flatpaks(remove_flatpaks)
 
         if remove_snaps:
+            _check_plugin_support(format="snap")
             uninstall_snaps(remove_snaps)
 
         pamac.run()
