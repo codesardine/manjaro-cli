@@ -6,11 +6,11 @@ color.title()
 def cli():
     pass
 
-@click.command(help="Search software on any package format")
-@click.option("-a", help="search all formats")
-@click.option("-n", help="search native package")
-@click.option("-f", help="search flatpak")
-@click.option("-s", help="search snap")
+@click.command(help="Search Software On Any Package Format")
+@click.option("-a", help="Search All formats")
+@click.option("-n", help="Search Native Package")
+@click.option("-f", help="Search Flatpak")
+@click.option("-s", help="Search Snap")
 def search(a, s, n, f):
     if a or s or n or f:
         if a:
@@ -37,8 +37,8 @@ def search(a, s, n, f):
         wrong_syntax("search")    
 
 @click.command(help="Set Drivers")
-@click.option("-o", help="Set open source graphic drivers", is_flag=True, is_eager=True, default=False)
-@click.option("-p", help="Set proprietary graphic drivers", is_flag=True, is_eager=True, default=False)
+@click.option("-o", help="Set Open Source Graphic Grivers", is_flag=True, is_eager=True, default=False)
+@click.option("-p", help="Set Proprietary Graphic Grivers", is_flag=True, is_eager=True, default=False)
 def drivers(o, p):
     from Manjaro.SDK import Hardware
     if o:
@@ -51,13 +51,13 @@ def drivers(o, p):
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("drivers")
 
-@click.command(help="Display system information")
-@click.option("-g", help="Graphic drivers", is_flag=True, is_eager=True, default=False)
-@click.option("-b", help="Current branch", is_flag=True, is_eager=True, default=False)
-@click.option("-e", is_flag=True, default=False, is_eager=True, help="error messages")
-@click.option("-w", is_flag=True, default=False, is_eager=True, help="warning messages")
-@click.option("-i", is_flag=True, default=False, is_eager=True, help="information messages")
-@click.option("-d", is_flag=True, default=False, is_eager=True, help="debug messages")
+@click.command(help="Display System Information")
+@click.option("-g", help="Graphic Drivers", is_flag=True, is_eager=True, default=False)
+@click.option("-b", help="Current Branch", is_flag=True, is_eager=True, default=False)
+@click.option("-e", is_flag=True, default=False, is_eager=True, help="Error Messages")
+@click.option("-w", is_flag=True, default=False, is_eager=True, help="Warning Messages")
+@click.option("-i", is_flag=True, default=False, is_eager=True, help="Information Messages")
+@click.option("-d", is_flag=True, default=False, is_eager=True, help="Debug Messages")
 def info(g, b, e, w, i, d):
     if g:
         from Manjaro.SDK import Hardware
@@ -82,16 +82,19 @@ def info(g, b, e, w, i, d):
         wrong_syntax("info")
 
 @click.command(help="Refresh reload data")
-@click.option("-d", is_flag=True, default=False, is_eager=True, help="package database")
-def refresh(d):
+@click.option("-d", is_flag=True, default=False, is_eager=True, help="Mirrors")
+@click.option("-k", is_flag=True, default=False, is_eager=True, help="Keyring")
+def refresh(d, k):
+    from Manjaro.CLI import Refresh
     if d:
-        from Manjaro.CLI import Refresh
         Refresh.database()
+    if k:
+        Refresh.keyring()
     else:
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("info")
 
-@click.command(help="Set current software branch")
+@click.command(help="Set Current Software Branch")
 @click.option("-s", is_flag=True, default=False, is_eager=True, help="Set Stable Branch")
 @click.option("-g", is_flag=True, default=False, is_eager=True, help="Set Staging Branch")
 @click.option("-t", is_flag=True, default=False, is_eager=True, help="Set Testing Branch")
@@ -110,10 +113,10 @@ def branch(s, g, t, u):
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("branch")
 
-@click.command(help="Install software packages")
-@click.option("-n", help="install native packages")
-@click.option("-f", help="install flatpaks")
-@click.option("-s", help="install snaps")
+@click.command(help="Install Software Packages")
+@click.option("-n", help="Install Native packages")
+@click.option("-f", help="Install Flatpaks")
+@click.option("-s", help="Install Snaps")
 def install(n, f, s):
     from Manjaro.CLI.packages import pamac
     if n:
@@ -129,10 +132,10 @@ def install(n, f, s):
         install_flatpaks(f)
     pamac.run()
 
-@click.command(help="Remove software packages")
-@click.option("-n", help="install native packages")
-@click.option("-f", help="install flatpaks")
-@click.option("-s", help="install snaps")
+@click.command(help="Remove Roftware Packages")
+@click.option("-n", help="Remove Native Packages")
+@click.option("-f", help="Remove Flatpaks")
+@click.option("-s", help="Remove Snaps")
 def remove(n, f, s):
     from Manjaro.CLI.packages import pamac
     if n:
