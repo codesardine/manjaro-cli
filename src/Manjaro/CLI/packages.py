@@ -1,9 +1,12 @@
 from Manjaro.SDK import PackageManager
-from Manjaro.CLI import color
+from Manjaro.CLI import color, Utils
+
+PackageManager.Pamac._on_emit_action_progress = Utils.action_progress
+PackageManager.Pamac._on_emit_hook_progress = Utils.hook_progress
 pamac = PackageManager.Pamac()
 
+
 def _check_plugin_support(format=""):
-    
     def _create_new_instance():
         import sys, subprocess
         subprocess.run(sys.argv)
