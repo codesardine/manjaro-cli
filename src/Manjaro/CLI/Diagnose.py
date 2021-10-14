@@ -3,7 +3,6 @@ from Manjaro.CLI import color
 
 debug_info = journal.Reader()
 debug_info.this_boot()
-print(dir(journal))
 
 def _msg(debug_info, level):
     color.action(f"Showing all {level} messages in your system")

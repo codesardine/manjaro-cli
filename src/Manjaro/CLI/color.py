@@ -2,13 +2,13 @@ from clint.textui import puts, colored, indent
 
 
 def title():
-    with indent(2):
+    with indent(3):
         print()
-        puts(colored.green("manjaro CLI"))
+        puts(colored.green("MANJARO CLI"))
 
 def action(msg):
     with indent(3, quote=">>"):
-        puts(colored.green(msg))
+        puts(colored.magenta(msg))
 
 def white(msg):
     with indent(2):

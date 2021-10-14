@@ -21,13 +21,13 @@ def _check_plugin_support(format=""):
         pamac.run()
         _create_new_instance()
 
-def add_pkg(pkgs):
+def install_pkg(pkgs):
     color.action("Instaling and upgrading packages")
     _list = pkgs.split(" ")
     return pamac.add_pkgs_to_install(_list)
 
 
-def add_flatpaks(pkgs):
+def install_flatpaks(pkgs):
     color.action("Instaling and upgrading flatpaks")
     _list = []
     for p in pkgs.split(" "):
@@ -39,7 +39,7 @@ def add_flatpaks(pkgs):
     pamac.add_pkgs_to_install(_list, pkg_format="flatpaks")
 
 
-def add_snaps(pkgs):
+def install_snaps(pkgs):
     color.action("Instaling and upgrading snaps")
     _list = []
     for p in pkgs.split(" "):
@@ -51,7 +51,7 @@ def add_snaps(pkgs):
     pamac.add_pkgs_to_install(_list, pkg_format="snaps")
 
 
-def uninstall_snaps(pkgs):
+def remove_snaps(pkgs):
     color.action("Removing snaps")
     _list = []
     for p in pkgs.split(" "):
@@ -63,7 +63,7 @@ def uninstall_snaps(pkgs):
     pamac.add_pkgs_to_remove(_list, pkg_format="snaps")
 
 
-def uninstall_flatpaks(pkgs):
+def remove_flatpaks(pkgs):
     color.action("Removing flatpaks")
     _list = []
     for p in pkgs.split(" "):
@@ -75,7 +75,7 @@ def uninstall_flatpaks(pkgs):
     pamac.add_pkgs_to_remove(_list, pkg_format="flatpaks")
 
 
-def uninstall_pkgs(pkgs):
+def remove_pkgs(pkgs):
     color.action("Removing packages")
     _list = pkgs.split(" ")
     pamac.add_pkgs_to_remove(_list)
@@ -105,7 +105,7 @@ def Search_snaps(snaps):
     color.action("Snaps Search Results".upper())
     _list = snaps.split(" ")
     for pkg in _list:
-        p = pamac.search_snaps(snaps)
+        p = pamac.search_snaps(pkg)
         if p:
             for i in p:
                 color.red(i.get_name())
@@ -125,7 +125,7 @@ def Search_flatpaks(flatpaks):
     color.action("Flatpak Search Results".upper())
     _list = flatpaks.split(" ")
     for pkg in _list:
-        p = pamac.search_flatpaks(flatpaks)
+        p = pamac.search_flatpaks(pkg)
         if p:
             for i in p:
                 color.red(i.get_name())

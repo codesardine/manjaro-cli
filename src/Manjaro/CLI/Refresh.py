@@ -1,10 +1,5 @@
 import subprocess
-from Manjaro.CLI import color
+from Manjaro.CLI import color, Utils
 
-def database(refresh):
-    if refresh == "database":
-        subprocess.run(["pacman-mirrors", "--fasttrack"])
-        subprocess.run(["pacman", "-Syy"])
-    else:
-        color.red("Use -d or database")
-
+def database():
+    Utils.spawn_cmd(["pacman-mirrors", "--fasttrack"])

@@ -1,134 +1,161 @@
 from Manjaro.CLI import color
 import click
 color.title()
+        
+@click.group()
+def cli():
+    pass
 
-
-@click.command()
-@click.option("--install", "-i", metavar="Packages(s)", help="install native packages")
-@click.option("--install-flatpaks", "-if", metavar="Packages(s)", help="install flatpaks")
-@click.option("--install-snaps", "-is", metavar="Packages(s)", help="install snaps")
-@click.option("--remove", "-r", metavar="Packages(s)", help="remove packages")
-@click.option("--remove-flatpaks", "-rf", metavar="Packages(s)", help="remove flatpaks")
-@click.option("--remove-snaps", "-rs", metavar="Packages(s)", help="remove snaps")
-@click.option("--search", "-sp", metavar="Name(s)", help="search package")
-@click.option("--search-flatpak", "-sf", metavar="Name(s)", help="search flatpak")
-@click.option("--search-snap", "-ss", metavar="Name(s)", help="search snap")
-@click.option("--search-all", "-sa", metavar="Name(s)", help="search all package formats")
-@click.option("--refresh", "-ref", metavar="Options=( database )", help="Refresh keys/mirrors/database")
-@click.option("--graphic-drivers", "-gd", metavar="Options=( -info/-set-open/-set-proprietary )", help="Information or detect and install graphic drivers")
-@click.option("--branch", "-br", metavar="Options=( -info/-set-stable/-set-staging/-set-testing/-set-unstable )", help="search package")
-@click.option("--journal", "-j", metavar="Options=( -error/-warning/-debug/-info )", help="Display messages in your system for debuging purposes")
-def cli(
-    install,
-    install_flatpaks,
-    install_snaps,
-    remove,
-    remove_flatpaks,
-    remove_snaps,
-    search,
-    search_flatpak,
-    search_snap,
-    search_all,
-    refresh,
-    graphic_drivers,
-    branch,
-    journal
-):
-    if search_flatpak or search_snap or search or search_all:
-        from Manjaro.CLI.packages import _check_plugin_support, Search_flatpaks, Search_pkgs, Search_snaps
-        if search_all:
+@click.command(help="Search software on any package format")
+@click.option("-a", help="search all formats")
+@click.option("-n", help="search native package")
+@click.option("-f", help="search flatpak")
+@click.option("-s", help="search snap")
+def search(a, s, n, f):
+    if a or s or n or f:
+        if a:
+            from Manjaro.CLI.packages import _check_plugin_support, Search_snaps, Search_flatpaks, Search_pkgs
             _check_plugin_support(format="flatpak")
             _check_plugin_support(format="snap")
-            Search_pkgs(search_all)
-            Search_flatpaks(search_all)
-            Search_snaps(search_all)
+            Search_pkgs(a)
+            Search_flatpaks(a)
+            Search_snaps(a)
+        if n:
+            from Manjaro.CLI.packages import Search_pkgs
+            Search_pkgs(n)
 
-        elif search:
-            Search_pkgs(search)
-
-        elif search_flatpak:
+        if f:
+            from Manjaro.CLI.packages import _check_plugin_support, Search_flatpaks
             _check_plugin_support(format="flatpak")
-            Search.flatpaks(search_flatpak)
-
-        elif search_snap:
+            Search_flatpaks(f)
+        if s:
+            from Manjaro.CLI.packages import _check_plugin_support, Search_snaps
             _check_plugin_support(format="snap")
-            Search_snaps(search_snap)
+            Search_snaps(s)
+    else:
+        from Manjaro.CLI.Utils import wrong_syntax
+        wrong_syntax("search")    
 
-    if refresh:
-        from Manjaro.CLI import Refresh
-        Refresh.database(refresh)
+@click.command(help="Set Drivers")
+@click.option("-o", help="Set open source graphic drivers", is_flag=True, is_eager=True, default=False)
+@click.option("-p", help="Set proprietary graphic drivers", is_flag=True, is_eager=True, default=False)
+def drivers(o, p):
+    from Manjaro.SDK import Hardware
+    if o:
+        Hardware.Graphics.set_open()
 
-    if branch:
-        from Manjaro.CLI import Branch
-        if branch == "-info":
-            Branch.info()
-        elif branch == "-set-stable":
-            Branch.stable()
+    elif p:
+        Hardware.Graphics.set_proprietary()
 
-        elif branch == "-set-staging":
-            Branch.staging()
+    else:
+        from Manjaro.CLI.Utils import wrong_syntax
+        wrong_syntax("drivers")
 
-        elif branch == "-set-testing":
-            Branch.testing()
-
-        elif branch == "-set-unstable":
-            Branch.unstable()
-        else:
-            color.red("Syntax is ( manjaro --branch -set-stable )")
-
-    if install or install_flatpaks or install_snaps \
-            or remove or remove_flatpaks or remove_snaps:
-        from Manjaro.CLI.packages import _check_plugin_support, pamac
-        from Manjaro.CLI.packages import add_pkg, add_snaps, add_flatpaks
-        from Manjaro.CLI.packages import uninstall_pkgs, uninstall_snaps, uninstall_flatpaks
-        if install:
-            add_pkg(install)
-
-        if install_snaps:
-            _check_plugin_support(format="snap")
-            add_snaps(install_snaps)
-
-        if install_flatpaks:
-            _check_plugin_support(format="flatpak")
-            add_flatpaks(install_flatpaks)         
-
-        if remove:
-            uninstall_pkgs(remove)
-
-        if remove_flatpaks:
-            _check_plugin_support(format="flatpak")
-            uninstall_flatpaks(remove_flatpaks)
-
-        if remove_snaps:
-            _check_plugin_support(format="snap")
-            uninstall_snaps(remove_snaps)
-
-        pamac.run()
-
-    if graphic_drivers:
+@click.command(help="Display system information")
+@click.option("-g", help="Graphic drivers", is_flag=True, is_eager=True, default=False)
+@click.option("-b", help="Current branch", is_flag=True, is_eager=True, default=False)
+@click.option("-e", is_flag=True, default=False, is_eager=True, help="error messages")
+@click.option("-w", is_flag=True, default=False, is_eager=True, help="warning messages")
+@click.option("-i", is_flag=True, default=False, is_eager=True, help="information messages")
+@click.option("-d", is_flag=True, default=False, is_eager=True, help="debug messages")
+def info(g, b, e, w, i, d):
+    if g:
         from Manjaro.SDK import Hardware
-        if graphic_drivers == "-info":
-            Hardware.Info().graphics_driver()
+        Hardware.Info().graphics_driver()
+    elif b:
+        from Manjaro.CLI import Branch
+        Branch.info()
+    elif e:
+        from Manjaro.CLI.Diagnose import error
+        error()
+    elif w:
+        from Manjaro.CLI.Diagnose import warning
+        warning()
+    elif i:
+        from Manjaro.CLI.Diagnose import info
+        info()
+    elif d:
+        from Manjaro.CLI.Diagnose import debug
+        debug()
+    else:
+        from Manjaro.CLI.Utils import wrong_syntax
+        wrong_syntax("info")
 
-        elif graphic_drivers == "-set-open":
-            Hardware.Graphics.set_open()
+@click.command(help="Refresh reload data")
+@click.option("-d", is_flag=True, default=False, is_eager=True, help="package database")
+def refresh(d):
+    if d:
+        from Manjaro.CLI import Refresh
+        Refresh.database()
+    else:
+        from Manjaro.CLI.Utils import wrong_syntax
+        wrong_syntax("info")
 
-        elif graphic_drivers == "-set-proprietary":
-            Hardware.Graphics.set_open()
+@click.command(help="Set current software branch")
+@click.option("-s", is_flag=True, default=False, is_eager=True, help="Set Stable Branch")
+@click.option("-g", is_flag=True, default=False, is_eager=True, help="Set Staging Branch")
+@click.option("-t", is_flag=True, default=False, is_eager=True, help="Set Testing Branch")
+@click.option("-u", is_flag=True, default=False, is_eager=True, help="Set Unstable Branch")
+def branch(s, g, t, u):
+    from Manjaro.CLI import Branch
+    if s:
+        Branch.stable()
+    elif g:
+        Branch.staging()
+    elif t:
+        Branch.testing()
+    elif u:
+        Branch.unstable()
+    else:
+        from Manjaro.CLI.Utils import wrong_syntax
+        wrong_syntax("branch")
 
-    if journal:
-        from Manjaro.CLI import Diagnose
-        if journal == "-error":
-            Diagnose.error()
+@click.command(help="Install software packages")
+@click.option("-n", help="install native packages")
+@click.option("-f", help="install flatpaks")
+@click.option("-s", help="install snaps")
+def install(n, f, s):
+    from Manjaro.CLI.packages import pamac
+    if n:
+        from Manjaro.CLI.packages import install_pkg
+        install_pkg(n)
+    if s:
+        from Manjaro.CLI.packages import _check_plugin_support, install_snaps
+        _check_plugin_support(format="snap")
+        install_snaps(s)
+    if f:
+        from Manjaro.CLI.packages import _check_plugin_support, install_flatpaks
+        _check_plugin_support(format="flatpak")
+        install_flatpaks(f)
+    pamac.run()
 
-        elif journal == "-debug":
-            Diagnose.debug()
+@click.command(help="Remove software packages")
+@click.option("-n", help="install native packages")
+@click.option("-f", help="install flatpaks")
+@click.option("-s", help="install snaps")
+def remove(n, f, s):
+    from Manjaro.CLI.packages import pamac
+    if n:
+        from Manjaro.CLI.packages import remove_pkgs
+        remove_pkgs(n)
+    if s:
+        from Manjaro.CLI.packages import _check_plugin_support, remove_snaps
+        _check_plugin_support(format="snap")
+        remove_snaps(s)
+    if f:
+        from Manjaro.CLI.packages import _check_plugin_support, remove_flatpaks
+        _check_plugin_support(format="flatpak")
+        remove_flatpaks(f)
+    pamac.run()
 
-        elif journal == "-warning":
-            Diagnose.warning()
-
-        elif journal == "-info":
-            Diagnose.info()
-
-        else:
-            color.red("Available options is [ -info/-error/-warning/-info ]")
+cmds = (
+    drivers,
+    info,
+    search,
+    refresh,
+    branch,
+    install,
+    remove
+)
+for cmd in cmds:
+    cli.add_command(cmd)
