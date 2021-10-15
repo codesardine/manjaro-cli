@@ -132,7 +132,7 @@ def install(n, f, s):
         install_flatpaks(f)
     pamac.run()
 
-@click.command(help="Remove Roftware Packages")
+@click.command(help="Remove Software Packages")
 @click.option("-n", help="Remove Native Packages")
 @click.option("-f", help="Remove Flatpaks")
 @click.option("-s", help="Remove Snaps")
