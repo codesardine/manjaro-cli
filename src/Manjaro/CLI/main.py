@@ -118,38 +118,46 @@ def branch(s, g, t, u):
 @click.option("-f", help="Install Flatpaks")
 @click.option("-s", help="Install Snaps")
 def install(n, f, s):
-    from Manjaro.CLI.packages import pamac
-    if n:
-        from Manjaro.CLI.packages import install_pkg
-        install_pkg(n)
-    if s:
-        from Manjaro.CLI.packages import _check_plugin_support, install_snaps
-        _check_plugin_support(format="snap")
-        install_snaps(s)
-    if f:
-        from Manjaro.CLI.packages import _check_plugin_support, install_flatpaks
-        _check_plugin_support(format="flatpak")
-        install_flatpaks(f)
-    pamac.run()
+    if n or f or s:
+        from Manjaro.CLI.packages import pamac
+        if n:
+            from Manjaro.CLI.packages import install_pkg
+            install_pkg(n)
+        if s:
+            from Manjaro.CLI.packages import _check_plugin_support, install_snaps
+            _check_plugin_support(format="snap")
+            install_snaps(s)
+        if f:
+            from Manjaro.CLI.packages import _check_plugin_support, install_flatpaks
+            _check_plugin_support(format="flatpak")
+            install_flatpaks(f)
+        pamac.run()
+    else:
+        from Manjaro.CLI.Utils import wrong_syntax
+        wrong_syntax("install")
 
 @click.command(help="Remove Roftware Packages")
 @click.option("-n", help="Remove Native Packages")
 @click.option("-f", help="Remove Flatpaks")
 @click.option("-s", help="Remove Snaps")
 def remove(n, f, s):
-    from Manjaro.CLI.packages import pamac
-    if n:
-        from Manjaro.CLI.packages import remove_pkgs
-        remove_pkgs(n)
-    if s:
-        from Manjaro.CLI.packages import _check_plugin_support, remove_snaps
-        _check_plugin_support(format="snap")
-        remove_snaps(s)
-    if f:
-        from Manjaro.CLI.packages import _check_plugin_support, remove_flatpaks
-        _check_plugin_support(format="flatpak")
-        remove_flatpaks(f)
-    pamac.run()
+    if n or f or s:
+        from Manjaro.CLI.packages import pamac
+        if n:
+            from Manjaro.CLI.packages import remove_pkgs
+            remove_pkgs(n)
+        if s:
+            from Manjaro.CLI.packages import _check_plugin_support, remove_snaps
+            _check_plugin_support(format="snap")
+            remove_snaps(s)
+        if f:
+            from Manjaro.CLI.packages import _check_plugin_support, remove_flatpaks
+            _check_plugin_support(format="flatpak")
+            remove_flatpaks(f)
+        pamac.run()
+    else:
+        from Manjaro.CLI.Utils import wrong_syntax
+        wrong_syntax("remove")
 
 cmds = (
     drivers,
