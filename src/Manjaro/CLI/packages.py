@@ -24,6 +24,7 @@ def _check_plugin_support(format=""):
         pamac.run()
         _create_new_instance()
 
+
 def install_pkg(pkgs):
     color.action("Instaling and upgrading packages")
     _list = pkgs.split(" ")
@@ -52,6 +53,14 @@ def install_snaps(pkgs):
                 _list.append(pkg)
 
     pamac.add_pkgs_to_install(_list, pkg_format="snaps")
+
+
+def install_appimages(pkgs):
+    color.action("Instaling Appimages")
+    _list = []
+    for p in pkgs.split(" "):
+        _list.append(p)
+    pamac.add_pkgs_to_install(_list, pkg_format="appimages")
 
 
 def remove_snaps(pkgs):
@@ -137,6 +146,27 @@ def Search_flatpaks(flatpaks):
                     color.cyan(title)
 
                 desc = i.get_desc()
+                if desc:
+                    color.white(desc)
+        else:
+            color.red("Not Found")
+        print()
+
+
+def Search_appimages(appimages):
+    color.action("Appimage Search Results".upper())
+    _list = appimages.split(" ")
+    for pkg in _list:
+        p = pamac.appimage.search(pkg)
+        if p:
+            for i in p:
+                d = pamac.appimage.get_details(i)
+                color.red(d["name"])
+                title = d["title"]
+                if title:
+                    color.cyan(title)
+
+                desc = d["description"]
                 if desc:
                     color.white(desc)
         else:

@@ -1,28 +1,32 @@
 from Manjaro.CLI import color
 import click
 color.title()
-        
+
+
 @click.group()
 def cli():
     pass
 
+
 @click.command(help="Search Software On Any Package Format")
-@click.option("-a", help="Search All formats")
-@click.option("-n", help="Search Native Package")
-@click.option("-f", help="Search Flatpak")
-@click.option("-s", help="Search Snap")
-def search(a, s, n, f):
-    if a or s or n or f:
-        if a:
-            from Manjaro.CLI.packages import _check_plugin_support, Search_snaps, Search_flatpaks, Search_pkgs
+@click.option("-m", help="Search Multiple Package Formats")
+@click.option("-p", help="Search Packages")
+@click.option("-f", help="Search Flatpaks")
+@click.option("-s", help="Search Snaps")
+@click.option("-a", help="Search Appimages")
+def search(m, s, p, f, a):
+    if m or s or p or f or a:
+        if m:
+            from Manjaro.CLI.packages import _check_plugin_support, Search_snaps, Search_flatpaks, Search_pkgs, Search_appimages
             _check_plugin_support(format="flatpak")
             _check_plugin_support(format="snap")
-            Search_pkgs(a)
-            Search_flatpaks(a)
-            Search_snaps(a)
-        if n:
+            Search_pkgs(m)
+            Search_flatpaks(m)
+            Search_snaps(m)
+            Search_appimages(m)
+        if p:
             from Manjaro.CLI.packages import Search_pkgs
-            Search_pkgs(n)
+            Search_pkgs(p)
 
         if f:
             from Manjaro.CLI.packages import _check_plugin_support, Search_flatpaks
@@ -32,9 +36,13 @@ def search(a, s, n, f):
             from Manjaro.CLI.packages import _check_plugin_support, Search_snaps
             _check_plugin_support(format="snap")
             Search_snaps(s)
+        if a:
+            from Manjaro.CLI.packages import Search_appimages
+            Search_appimages(a)
     else:
         from Manjaro.CLI.Utils import wrong_syntax
-        wrong_syntax("search")    
+        wrong_syntax("search")   
+
 
 @click.command(help="Set Drivers")
 @click.option("-o", help="Set Open Source Graphic Grivers", is_flag=True, is_eager=True, default=False)
@@ -50,6 +58,7 @@ def drivers(o, p):
     else:
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("drivers")
+
 
 @click.command(help="Display System Information")
 @click.option("-g", help="Graphic Drivers", is_flag=True, is_eager=True, default=False)
@@ -81,6 +90,7 @@ def info(g, b, e, w, i, d):
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("info")
 
+
 @click.command(help="Refresh reload data")
 @click.option("-d", is_flag=True, default=False, is_eager=True, help="Mirrors")
 @click.option("-k", is_flag=True, default=False, is_eager=True, help="Keyring")
@@ -94,17 +104,15 @@ def refresh(d, k):
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("info")
 
+
 @click.command(help="Set Current Software Branch")
 @click.option("-s", is_flag=True, default=False, is_eager=True, help="Set Stable Branch")
-@click.option("-g", is_flag=True, default=False, is_eager=True, help="Set Staging Branch")
 @click.option("-t", is_flag=True, default=False, is_eager=True, help="Set Testing Branch")
 @click.option("-u", is_flag=True, default=False, is_eager=True, help="Set Unstable Branch")
-def branch(s, g, t, u):
+def branch(s, t, u):
     from Manjaro.CLI import Branch
     if s:
         Branch.stable()
-    elif g:
-        Branch.staging()
     elif t:
         Branch.testing()
     elif u:
@@ -113,16 +121,19 @@ def branch(s, g, t, u):
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("branch")
 
+
 @click.command(help="Install Software Packages")
-@click.option("-n", help="Install Native packages")
+@click.option("-p", help="Install Packages")
 @click.option("-f", help="Install Flatpaks")
 @click.option("-s", help="Install Snaps")
-def install(n, f, s):
-    if n or f or s:
+@click.option("-a", help="Install Appimages")
+
+def install(p, f, s, a):
+    if p or f or s or a:
         from Manjaro.CLI.packages import pamac
-        if n:
+        if p:
             from Manjaro.CLI.packages import install_pkg
-            install_pkg(n)
+            install_pkg(p)
         if s:
             from Manjaro.CLI.packages import _check_plugin_support, install_snaps
             _check_plugin_support(format="snap")
@@ -131,21 +142,25 @@ def install(n, f, s):
             from Manjaro.CLI.packages import _check_plugin_support, install_flatpaks
             _check_plugin_support(format="flatpak")
             install_flatpaks(f)
+        if a:
+            from Manjaro.CLI.packages import install_appimages
+            install_appimages(a)
         pamac.run()
     else:
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("install")
 
+
 @click.command(help="Remove Roftware Packages")
-@click.option("-n", help="Remove Native Packages")
+@click.option("-p", help="Remove Packages")
 @click.option("-f", help="Remove Flatpaks")
 @click.option("-s", help="Remove Snaps")
-def remove(n, f, s):
-    if n or f or s:
+def remove(p, f, s):
+    if p or f or s:
         from Manjaro.CLI.packages import pamac
-        if n:
+        if p:
             from Manjaro.CLI.packages import remove_pkgs
-            remove_pkgs(n)
+            remove_pkgs(p)
         if s:
             from Manjaro.CLI.packages import _check_plugin_support, remove_snaps
             _check_plugin_support(format="snap")
@@ -159,6 +174,7 @@ def remove(n, f, s):
         from Manjaro.CLI.Utils import wrong_syntax
         wrong_syntax("remove")
 
+
 cmds = (
     drivers,
     info,
@@ -168,5 +184,7 @@ cmds = (
     install,
     remove
 )
+
+
 for cmd in cmds:
     cli.add_command(cmd)
