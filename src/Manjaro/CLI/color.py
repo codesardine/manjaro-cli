@@ -11,19 +11,15 @@ def action(msg):
         puts(colored.magenta(msg))
 
 def white(msg):
-    with indent(2):
-        puts(colored.white(msg))
+    puts(colored.white(f"Description:  {msg}"))
 
 
 def red(msg):
-    with indent(2):
-        puts(colored.red(msg))
+    puts(colored.red(f"Package:      {msg}"))
 
 
 def cyan(msg):
-    with indent(2):
-        puts(colored.cyan(msg))
+    puts(colored.cyan(f"Title:        {msg}"))
 
 def yellow(msg):
-    with indent(2):
-        puts(colored.yellow(msg))
+    puts(colored.yellow(msg))
