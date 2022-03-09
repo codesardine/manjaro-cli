@@ -15,11 +15,11 @@ def white(msg):
 
 
 def red(msg):
-    puts(colored.red(f"Package:      {msg}"))
+    puts(colored.red(msg))
 
 
 def cyan(msg):
     puts(colored.cyan(f"Title:        {msg}"))
 
 def yellow(msg):
-    puts(colored.yellow(msg))
+    puts(colored.yellow(f"Package:      {msg}"))

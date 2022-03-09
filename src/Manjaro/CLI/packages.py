@@ -100,7 +100,7 @@ def Search_pkgs(pkgs):
         p = pamac.search_pkgs(pkg)
         if p:
             for i in p:
-                color.red(i.get_name())
+                color.yellow(i.get_name())
                 title = i.get_app_name()
                 if title:
                     color.cyan(title)
@@ -120,7 +120,7 @@ def Search_snaps(snaps):
         p = pamac.search_snaps(pkg)
         if p:
             for i in p:
-                color.red(i.get_name())
+                color.yellow(i.get_name())
                 title = i.get_app_name()
                 if title:
                     color.cyan(title)
@@ -140,7 +140,7 @@ def Search_flatpaks(flatpaks):
         p = pamac.search_flatpaks(pkg)
         if p:
             for i in p:
-                color.red(i.get_name())
+                color.yellow(i.get_name())
                 title = i.get_app_name()
                 if title:
                     color.cyan(title)
@@ -161,7 +161,7 @@ def Search_appimages(appimages):
         if p:
             for i in p:
                 d = pamac.appimage.get_details(i)
-                color.red(d["name"])
+                color.yellow(d["name"])
                 title = d["title"]
                 if title:
                     color.cyan(title)
