@@ -151,7 +151,7 @@ def install(p, f, s, a):
         wrong_syntax("install")
 
 
-@click.command(help="Remove Roftware Packages")
+@click.command(help="Remove Software Packages")
 @click.option("-p", help="Remove Packages")
 @click.option("-f", help="Remove Flatpaks")
 @click.option("-s", help="Remove Snaps")

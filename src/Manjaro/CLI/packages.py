@@ -1,8 +1,8 @@
 from Manjaro.SDK import PackageManager
 from Manjaro.CLI import color, Utils
 
-PackageManager.Pamac._on_emit_action_progress = Utils.action_progress
-PackageManager.Pamac._on_emit_hook_progress = Utils.hook_progress
+
+PackageManager.Pamac.on_msg_emit = Utils.on_msg_emit
 pamac = PackageManager.Pamac()
 
 
@@ -12,13 +12,13 @@ def _check_plugin_support(format=""):
         subprocess.run(sys.argv)
         sys.exit()
 
-    if format == "flatpak" and not pamac.config.get_support_flatpak():
+    if format == "flatpak" and not pamac.flatpak.is_plugin_installed():
         color.action("Instaling Flatpak Plugin")
         pamac.add_pkgs_to_install(["libpamac-flatpak-plugin"])
         pamac.run()
         _create_new_instance()
 
-    elif format == "snap" and not pamac.config.get_support_snap():
+    elif format == "snap" and not pamac.snap.is_plugin_installed():
         color.action("Instaling Snap Plugin")
         pamac.add_pkgs_to_install(["libpamac-snap-plugin"])
         pamac.run()
