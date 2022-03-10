@@ -25,6 +25,11 @@ def _check_plugin_support(format=""):
         _create_new_instance()
 
 
+def upgrade():
+    pamac.options["upgrade"] = True
+    pamac.run()
+    
+
 def install_pkg(pkgs):
     color.action("Instaling and upgrading packages")
     _list = pkgs.split(" ")

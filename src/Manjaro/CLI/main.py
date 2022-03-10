@@ -8,6 +8,12 @@ def cli():
     pass
 
 
+@click.command(help="Upgrade Software")
+def update():
+    from Manjaro.CLI.packages import upgrade
+    upgrade()
+    
+
 @click.command(help="Search Software On Any Package Format")
 @click.option("-m", help="Search Multiple Package Formats")
 @click.option("-p", help="Search Packages")
@@ -182,7 +188,8 @@ cmds = (
     refresh,
     branch,
     install,
-    remove
+    remove,
+    update
 )
 
 
