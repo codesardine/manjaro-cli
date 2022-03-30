@@ -5,12 +5,6 @@ def info():
     current_branch = Branch().get_branch()
     color.action(f"Current branch is {current_branch}")
     return current_branch
-
-def staging():
-    current_branch = info()
-    if current_branch != "staging":
-        color.action(f"Setting branch to staging")
-        Branch().set_branch_mirrors("stable-staging")
     
 
 def stable():
