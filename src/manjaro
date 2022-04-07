@@ -3,14 +3,14 @@ import sys
 from Manjaro.CLI import main, color
 if len(sys.argv) == 1:
     color.action("Package search example:")
-    color.white(" manjaro search -p gimp")
+    color.white(" manjaro search -p gimp", description=False)
     color.action("Package search multiple values using quotes")
-    color.white(" manjaro search -p 'gimp inkscape firefox'")
+    color.white(" manjaro search -p 'gimp inkscape firefox'", description=False)
     color.action("Advanced syntax")
     color.white(
-        " manjaro install -p gimp -s 'gimp inkscape' -f org.gimp.GIMP")
+        " manjaro install -p gimp -s 'gimp inkscape' -f org.gimp.GIMP", description=False)
     color.action("For command usage:")
-    color.white(" manjaro command --help")
+    color.white(" manjaro command --help", description=False)
     print()
     import subprocess
     subprocess.run(["manjaro", "--help"])
